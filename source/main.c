@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 
 typedef struct vector {
 	double i;
@@ -9,7 +10,7 @@ typedef struct vector {
 void print_vector(vector v);
 void cross_product(vector v1, vector v2, vector *v1_x_v2);
 void normalize_vector(vector *v);
-void scale_vector(vector *v);
+void scale_vector(vector *v, double scale);
 double vector_magnitude(vector v);
 
 int main()
@@ -26,10 +27,12 @@ int main()
 	
 	vector v1_x_v2;
 	cross_product(my_vector, my_vector2, &v1_x_v2);
-	
 	print_vector(my_vector);
 	print_vector(my_vector2);
 	printf("The cross product of v1 and v2: ");
+	print_vector(v1_x_v2);
+	printf("The normalized cross product of v1 and v2: ");
+	normalize_vector(&v1_x_v2);
 	print_vector(v1_x_v2);
 	return 0;	
 }
@@ -44,4 +47,27 @@ void cross_product(vector v1, vector v2, vector *v1_x_v2)
 	v1_x_v2->j = v1.k*v2.i - v1.i*v2.k;
 	v1_x_v2->k = v1.i*v2.j - v1.j*v2.i;
 	return;
+}
+
+void normalize_vector(vector *v)
+{
+	double scale = 1/vector_magnitude(*v);
+	//printf("scale: %.2f\n", scale);
+	scale_vector(v, scale);
+	return;
+}
+
+void scale_vector(vector *v, double scale)
+{
+	v->i *= scale;
+	v->j *= scale;
+	v->k *= scale;
+	return;
+}
+
+double vector_magnitude(vector v)
+{
+	double mag = sqrt(v.i*v.i + v.j*v.j + v.k*v.k);
+	printf("magnitude: %.2f\n", mag);
+	return mag;
 }
