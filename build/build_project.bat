@@ -1,0 +1,1 @@
+gcc -o ./build/program -I.\includes\ .\source\*.c
