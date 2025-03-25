@@ -3,44 +3,44 @@
 #include <math.h>
 
 void print_vector(vector v) {
-	printf("i: %.2f | j: %.2f | k: %.2f\n", v.i, v.j, v.k);
+	printf("i: %.2f | j: %.2f | k: %.2f\n", v.ijk[0], v.ijk[1], v.ijk[2]);
 }
 
 void cross_product(vector v1, vector v2, vector *v1_x_v2)
 {
-	v1_x_v2->i = v1.j*v2.k - v1.k*v2.j;
-	v1_x_v2->j = v1.k*v2.i - v1.i*v2.k;
-	v1_x_v2->k = v1.i*v2.j - v1.j*v2.i;
+	v1_x_v2->ijk[0] = v1.ijk[1]*v2.ijk[2] - v1.ijk[2]*v2.ijk[1];
+	v1_x_v2->ijk[1] = v1.ijk[2]*v2.ijk[0] - v1.ijk[0]*v2.ijk[2];
+	v1_x_v2->ijk[2] = v1.ijk[0]*v2.ijk[1] - v1.ijk[1]*v2.ijk[0];
 	return;
 }
 
 void normalize_vector(vector *v)
 {
-	double scale = 1/vector_magnitude(*v);
+	float scale = 1/vector_magnitude(*v);
 	//printf("scale: %.2f\n", scale);
 	scale_vector(v, scale);
 	return;
 }
 
-void scale_vector(vector *v, double scale)
+void scale_vector(vector *v, float scale)
 {
-	v->i *= scale;
-	v->j *= scale;
-	v->k *= scale;
+	v->ijk[0] *= scale;
+	v->ijk[1] *= scale;
+	v->ijk[2] *= scale;
 	return;
 }
 
-double vector_magnitude(vector v)
+float vector_magnitude(vector v)
 {
-	double mag = sqrt(v.i*v.i + v.j*v.j + v.k*v.k);
+	float mag = sqrt(v.ijk[0]*v.ijk[0] + v.ijk[1]*v.ijk[1] + v.ijk[2]*v.ijk[2]);
 	printf("magnitude: %.2f\n", mag);
 	return mag;
 }
 
 void vector_subtract(vector v1, vector v2, vector *v1_minus_v2)
 {
-	v1_minus_v2->i = v1.i - v2.i;
-	v1_minus_v2->j = v1.j - v2.j;
-	v1_minus_v2->k = v1.k - v2.k;
+	v1_minus_v2->ijk[0] = v1.ijk[0] - v2.ijk[0];
+	v1_minus_v2->ijk[1] = v1.ijk[1] - v2.ijk[1];
+	v1_minus_v2->ijk[2] = v1.ijk[2] - v2.ijk[2];
 	return;
 }

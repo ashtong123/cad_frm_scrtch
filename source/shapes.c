@@ -13,10 +13,10 @@ void unit_cube(triangle *triangles)
 	//    v[3] = (0, 1, 1)
 	//    etc.. 
 	for(i = 0; i < 8; i++) {
-		vertices[i].i = i & 1; 
-		vertices[i].j = (i & 2) >> 1;
-		vertices[i].k = (i & 4) >> 2;
-		printf("vertex %d x: %.2f, y: %.2f, z: %.2f\n", i, vertices[i].i, vertices[i].j, vertices[i].k);
+		vertices[i].ijk[0] = i & 1; 
+		vertices[i].ijk[1] = (i & 2) >> 1;
+		vertices[i].ijk[2] = (i & 4) >> 2;
+		printf("vertex %d x: %.2f, y: %.2f, z: %.2f\n", i, vertices[i].ijk[0], vertices[i].ijk[1], vertices[i].ijk[2]);
 	}
 	
 	//create triangles for unit cube

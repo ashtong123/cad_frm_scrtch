@@ -2,8 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <stdint.h>
 
-void write_triangles_stl(triangle *triangles, int triangle_count)
+void write_triangles_stl_ascii(triangle *triangles, int triangle_count)
 {
 	FILE *fp;
 	char *s1;
@@ -17,9 +18,9 @@ void write_triangles_stl(triangle *triangles, int triangle_count)
 		s1 = malloc(100);
 		s2 = malloc(100);
 		s3 = malloc(100);
-		float_to_scientific_notation(triangles[i].vnorm.i, s1);
-		float_to_scientific_notation(triangles[i].vnorm.j, s2);
-		float_to_scientific_notation(triangles[i].vnorm.k, s3);
+		float_to_scientific_notation(triangles[i].vnorm.ijk[0], s1);
+		float_to_scientific_notation(triangles[i].vnorm.ijk[1], s2);
+		float_to_scientific_notation(triangles[i].vnorm.ijk[2], s3);
 		fprintf(fp, "%s %s %s\n\t", s1, s2, s3);
 		free(s1);
 		free(s2);
@@ -30,9 +31,9 @@ void write_triangles_stl(triangle *triangles, int triangle_count)
 		s1 = malloc(100);
 		s2 = malloc(100);
 		s3 = malloc(100);
-		float_to_scientific_notation(triangles[i].vx1.i, s1);
-		float_to_scientific_notation(triangles[i].vx1.j, s2);
-		float_to_scientific_notation(triangles[i].vx1.k, s3);
+		float_to_scientific_notation(triangles[i].vx1.ijk[0], s1);
+		float_to_scientific_notation(triangles[i].vx1.ijk[1], s2);
+		float_to_scientific_notation(triangles[i].vx1.ijk[2], s3);
 		fprintf(fp, "%s %s %s\n\t\t", s1, s2, s3);
 		free(s1);
 		free(s2);
@@ -42,9 +43,9 @@ void write_triangles_stl(triangle *triangles, int triangle_count)
 		s1 = malloc(100);
 		s2 = malloc(100);
 		s3 = malloc(100);
-		float_to_scientific_notation(triangles[i].vx2.i, s1);
-		float_to_scientific_notation(triangles[i].vx2.j, s2);
-		float_to_scientific_notation(triangles[i].vx2.k, s3);
+		float_to_scientific_notation(triangles[i].vx2.ijk[0], s1);
+		float_to_scientific_notation(triangles[i].vx2.ijk[1], s2);
+		float_to_scientific_notation(triangles[i].vx2.ijk[2], s3);
 		fprintf(fp, "%s %s %s\n\t\t", s1, s2, s3);
 		free(s1);
 		free(s2);
@@ -54,9 +55,9 @@ void write_triangles_stl(triangle *triangles, int triangle_count)
 		s1 = malloc(100);
 		s2 = malloc(100);
 		s3 = malloc(100);
-		float_to_scientific_notation(triangles[i].vx3.i, s1);
-		float_to_scientific_notation(triangles[i].vx3.j, s2);
-		float_to_scientific_notation(triangles[i].vx3.k, s3);
+		float_to_scientific_notation(triangles[i].vx3.ijk[0], s1);
+		float_to_scientific_notation(triangles[i].vx3.ijk[1], s2);
+		float_to_scientific_notation(triangles[i].vx3.ijk[2], s3);
 		fprintf(fp, "%s %s %s\n\t", s1, s2, s3);
 		free(s1);
 		free(s2);
@@ -68,7 +69,33 @@ void write_triangles_stl(triangle *triangles, int triangle_count)
 	return;
 }
 
-void float_to_scientific_notation(double d, char *s)
+void write_triangles_stl_bin(triangle *triangles, uint32_t triangle_count)
+{
+	FILE *fp;
+	fp = fopen(".\\models\\cube.stl", "w");
+	//write header
+	uint8_t *header = malloc(80);
+	fwrite(header, sizeof(uint8_t), 80, fp);
+	//write triangle count
+	fwrite(&triangle_count, sizeof(uint32_t), 1, fp);
+	uint16_t attr_byte_count = 0;
+
+	for(int i = 0; i < triangle_count; ++i) {
+		//write normal vector
+		fwrite(&triangles[i].vnorm, sizeof(float), 3, fp);
+		//write point 1
+		fwrite(&triangles[i].vx1, sizeof(float), 3, fp);
+		//write point 2
+		fwrite(&triangles[i].vx2, sizeof(float), 3, fp);
+		//write point 3
+		fwrite(&triangles[i].vx3, sizeof(float), 3, fp);
+		//write attribute byte count
+		fwrite(&attr_byte_count, sizeof(uint16_t), 1, fp);
+	}
+	return;
+}
+
+void float_to_scientific_notation(float d, char *s)
 {
 	int exp = 0;
 	int sign;
