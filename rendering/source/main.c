@@ -19,7 +19,7 @@ int main()
 		printf("glfw initializated successfully\n");
 	}
 	
-	//create window
+	//create window and glfw/openGL admin
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -31,9 +31,16 @@ int main()
 	glfwMakeContextCurrent(window);
 	gladLoadGL();
 	
+	//setup callbacks
 	glfwSetWindowCloseCallback(window, close_window_callback);
 	glfwSetKeyCallback(window, key_callback);
+	glfwSetFramebufferSizeCallback(window, framebuffer_resize_callback); 	
+	//render something
+	int width, height;
+	glfwGetFramebufferSize(window, &width, &height);
+	glViewport(0, 0, width, height);
 	
+	//window maintenannce
 	while (!glfwWindowShouldClose(window))
 	{
 		// Keep running
@@ -67,4 +74,10 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
 	printf("Window closed by ESC key press\n");
+}
+
+void framebuffer_resize_callback(GLFWwindow* window)
+{
+	printf("Window closed by EXIT button click\n");
+	return;
 }
