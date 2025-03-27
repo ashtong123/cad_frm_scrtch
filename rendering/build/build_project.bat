@@ -1,0 +1,1 @@
+gcc -o .\build\program.exe .\source\*.c -I .\includes\
