@@ -1,1 +1,1 @@
-gcc -o .\build\program.exe .\source\*.c -I .\includes\
+gcc -o .\executables\program.exe .\source\*.c -I .\includes\ .\lib\lib-mingw-w64\libglfw3.a -lgdi32
