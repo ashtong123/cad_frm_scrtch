@@ -132,8 +132,11 @@ int main()
 	//generate a vertex buffer object (VBO)
 	unsigned int VBO;
 	glGenBuffers(1, &VBO);
+	//generate a vertex array object (VAO)
+	unsigned int VAO;
+	glGenVertexArrays(1, &VAO);
 	
-	//create shaders
+	//CREATE SHADERS
 	//create vertex shader
 	unsigned int vertexShader;
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -150,14 +153,14 @@ int main()
 	//check if shader compilation was successful
 	int  success;
 	char infoLog[512];
-	//vertex shader check
+	//vertex shader compilation error check
 	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
 	if(!success)
 	{
 		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
 		printf("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n%s\n", infoLog);
 	}
-	//fragment shader check
+	//fragment shader compilation error check
 	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
 	if(!success)
 	{
@@ -165,7 +168,7 @@ int main()
 		printf("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n%s\n", infoLog);
 	}
 	
-	//link shaders
+	//LINK SHADERS
 	unsigned int shaderProgram;
 	shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertexShader);
@@ -182,18 +185,17 @@ int main()
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader); 
 	
-	//RENDER A TRIANGLE	 
+	//RENDER A TRIANGLE	INITIALIZATION 
 	//copy vertices into a buffer
-	// 0. copy our vertices array in a buffer for OpenGL to use
+	// 1. Bind VAO
+	glBindVertexArray(VAO);
+	// 2. copy our vertices array in a buffer for OpenGL to use
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	// 1. then set the vertex attributes pointers
+	// 3. then set the vertex attributes pointers
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);  
-	// 2. use our shader program when we want to render an object
-	glUseProgram(shaderProgram);
-	// 3. now draw the object 
-	someOpenGLFunctionThatDrawsOurTriangle();
+
 
 	//set initial window color
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -201,11 +203,20 @@ int main()
 	//window maintenance
 	while (!glfwWindowShouldClose(window))
 	{
-		//render something ... WORK HERE
+		//RENDER A TRIANGLE DRAWING IN LOOP
+		// 4. use our shader program when we want to render an object
+		glUseProgram(shaderProgram);
+		// 5. Bind our VAO created previously
+		glBindVertexArray(VAO);
+		// 6. now draw the object 
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+		
 		
 		//SET WINDOW COLOR
+		
 		int width, height;
 		glfwGetFramebufferSize(window, &width, &height);
+		/*
 		//get current clear color
 		GLfloat bkColor[4]; 
 		glGetFloatv(GL_COLOR_CLEAR_VALUE, bkColor);
@@ -213,6 +224,7 @@ int main()
 		//set new window with existing bkColor
 		glClearColor(bkColor[0], bkColor[1], bkColor[2], bkColor[3]);
 		glClear(GL_COLOR_BUFFER_BIT);
+		*/
 		
 		glViewport(0, 0, width, height);
 		
