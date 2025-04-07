@@ -203,6 +203,21 @@ int main()
 	//window maintenance
 	while (!glfwWindowShouldClose(window))
 	{
+		//SET WINDOW COLOR
+		int width, height;
+		
+		glfwGetFramebufferSize(window, &width, &height);
+		
+		//get current clear color
+		GLfloat bkColor[4]; 
+		glGetFloatv(GL_COLOR_CLEAR_VALUE, bkColor);
+		
+		//set new window with existing bkColor
+		glClearColor(bkColor[0], bkColor[1], bkColor[2], bkColor[3]);
+		glClear(GL_COLOR_BUFFER_BIT);
+		
+		glViewport(0, 0, width, height);
+		
 		//RENDER A TRIANGLE DRAWING IN LOOP
 		// 4. use our shader program when we want to render an object
 		glUseProgram(shaderProgram);
@@ -211,24 +226,8 @@ int main()
 		// 6. now draw the object 
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		
-		
-		//SET WINDOW COLOR
-		
-		int width, height;
-		glfwGetFramebufferSize(window, &width, &height);
-		/*
-		//get current clear color
-		GLfloat bkColor[4]; 
-		glGetFloatv(GL_COLOR_CLEAR_VALUE, bkColor);
-		
-		//set new window with existing bkColor
-		glClearColor(bkColor[0], bkColor[1], bkColor[2], bkColor[3]);
-		glClear(GL_COLOR_BUFFER_BIT);
-		*/
-		
-		glViewport(0, 0, width, height);
-		
 		glfwSwapBuffers(window); //swap front and back buffer after rendering
+		
 		glfwPollEvents();
 	}
 	glfwDestroyWindow(window);
