@@ -9,6 +9,10 @@ void close_window_callback(GLFWwindow* window);
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void framebuffer_resize_callback(GLFWwindow* window, int width, int height);
 
+//global variables
+unsigned int shaderProgram;
+unsigned int VAO;
+
 //shaders
 //vertex shader
 const char *vertexShaderSource = "#version 330 core\n"
@@ -74,6 +78,14 @@ void framebuffer_resize_callback(GLFWwindow* window, int width, int height)
 	
 	glViewport(0, 0, width, height);
 	
+	//RENDER A TRIANGLE DRAWING IN LOOP
+	// 4. use our shader program when we want to render an object
+	glUseProgram(shaderProgram);
+	// 5. Bind our VAO created previously
+	glBindVertexArray(VAO);
+	// 6. now draw the object 
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+	
 	glfwSwapBuffers(window); //swap front and back buffer after rendering
 	printf("Window framebuffer resized to %dx%d\n", width, height);
 	return;
@@ -133,7 +145,6 @@ int main()
 	unsigned int VBO;
 	glGenBuffers(1, &VBO);
 	//generate a vertex array object (VAO)
-	unsigned int VAO;
 	glGenVertexArrays(1, &VAO);
 	
 	//CREATE SHADERS
@@ -169,8 +180,7 @@ int main()
 	}
 	
 	//LINK SHADERS
-	unsigned int shaderProgram;
-	shaderProgram = glCreateProgram();
+	shaderProgram = glCreateProgram(); //GLOBAL VARIABLE
 	glAttachShader(shaderProgram, vertexShader);
 	glAttachShader(shaderProgram, fragmentShader);
 	glLinkProgram(shaderProgram);
